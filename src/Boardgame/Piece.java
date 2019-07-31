@@ -7,11 +7,13 @@ public class Piece {
 	
 	public Piece(Board board) {
 		this.board=board;
-		position=null;
+		position=null;//o null é automático, apenas para facilitar a leitura
 	}
 	
 	protected Board getBoard() {
 		return board;
 	}
 
+	
+	
 }
