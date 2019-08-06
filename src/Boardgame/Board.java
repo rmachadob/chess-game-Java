@@ -6,8 +6,13 @@ public class Board {
 	private int columns;
 	private Piece[][] pieces;
 
+<<<<<<< HEAD
 	public Board(int rows, int columns) {//para evitar de criar um board com linha ou coluna 0
 		if(rows<1||columns<1) {
+=======
+	public Board(int rows, int columns) {
+		if (rows < 1 || columns < 1) {
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
 			throw new BoardException("Error creating board: there must be at least 1 row and 1 column");
 		}
 		this.rows = rows;
@@ -19,6 +24,7 @@ public class Board {
 		return rows;
 	}
 
+<<<<<<< HEAD
 	
 	public int getColumns() {
 		return columns;
@@ -28,13 +34,25 @@ public class Board {
 
 	public Piece piece(int row, int column) {
 		if(!positionExists(row, column)) {//caso a posição não(!) exista, lança exceção
+=======
+	public int getColumns() {
+		return columns;
+	}
+ 
+	public Piece piece(int row, int column) {
+		if (!positionExists(row, column)) {
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
 			throw new BoardException("Position not on the board");
 		}
 		return pieces[row][column];
 	}
 
 	public Piece piece(Position position) {
+<<<<<<< HEAD
 		if(!positionExists(position)) {
+=======
+		if (!positionExists(position)) {
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
 			throw new BoardException("Position not on the board");
 		}
 		return pieces[position.getRow()][position.getColumn()];
@@ -42,8 +60,13 @@ public class Board {
 	//posição pela posição mesmo ou pela linha e coluna
 
 	public void placePiece(Piece piece, Position position) {
+<<<<<<< HEAD
 		if(thereIsAPiece(position))/*pra testar se ja tem peça na posição*/ {
 			throw new BoardException("There is already a piece on position "+position);
+=======
+		if (thereIsAPiece(position)) {
+			throw new BoardException("There is already a piece on position" + position);
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
 		}
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position;
@@ -58,10 +81,18 @@ public class Board {
 	}
 
 	public boolean thereIsAPiece(Position position) {
+<<<<<<< HEAD
 		if(!positionExists(position)) {//assim, quando chamar thereIsAPiece já testa se a posição existe
 			throw new BoardException("Position not on the board");
 		}
 		return piece(position) != null;
 	}//pra saber se já tem uma peça ou nao, ver se eh diferente de null
+=======
+		if (!positionExists(position)) {
+			throw new BoardException("Position not on the board");
+		}
+		return piece(position) != null;
+	}
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
 
 }

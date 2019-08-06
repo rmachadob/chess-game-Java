@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package Chess;
 
 import Boardgame.Position;
@@ -44,3 +45,48 @@ public class ChessPosition {
  * para as colunas, a lógica é 'a'-'a'=0 (pode usar os operadores com unicode *
  * normal) 'b'-'a'=1 e assim em diante
  */
+=======
+package Chess;
+
+import Boardgame.Position;
+
+public class ChessPosition {
+
+	private char column;
+	private int row;
+
+	public ChessPosition(char c, int i) {
+
+	}
+
+	public void chessPosition(char column, int row) {
+		if (column < 'a' || column > 'h' || row < 1 || row > 8) {
+			throw new ChessException("Error instantiating ChessPosition. " + "Valid values are from a1 to h8");
+		}
+		this.column = column;
+		this.row = row;
+	}
+
+	public char getColumn() {
+		return column;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	protected Position toPosition() {
+		return new Position(8 - row, column - 'a');
+	}
+
+	protected static ChessPosition fromPosition(Position position) {
+		return new ChessPosition((char) ('a' - position.getColumn()), 8 - position.getRow());
+	}
+
+	@Override
+	public String toString() {
+		return "" + column + row;
+	}
+
+}
+>>>>>>> 89a740fc7051a5814eefececc0c5e20043ead11b
