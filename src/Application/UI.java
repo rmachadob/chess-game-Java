@@ -11,20 +11,20 @@ public class UI {
 				printPiece(pieces[i][j]);
 
 			}
-			System.out.println();
+			System.out.println();//quebra a linha
 
 		}
-		
+
 		System.out.println("  a b c d e f g h");
 	}
 
 	private static void printPiece(ChessPiece piece) {
 		if (piece == null) {
-			System.out.print("-");
+			System.out.print("-");//se for nulo (sem peça) imprime tracinho
 		} else {
 			System.out.print(piece);
 		}
-		System.out.print(" ");
+		System.out.print(" ");//pras peças não ficarem grudadas
 	}
 
 }

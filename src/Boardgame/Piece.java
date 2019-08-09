@@ -10,7 +10,7 @@ public class Piece {
 		position=null;//o null é automático, apenas para facilitar a leitura
 	}
 	
-	protected Board getBoard() {
+	protected Board getBoard() {//protected:somente subclasses ou classes do mesmo pacote
 		return board;
 	}
 
