@@ -19,24 +19,49 @@ public class Board {
 		return rows;
 	}
 
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
-
 	public int getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
 	public Piece piece(int row, int column) {
+		if (!positionExists(row, column)) {
+			throw new BoardException("Position not on the board");
+		} // se a posição não existir lança nova exceção
 		return pieces[row][column];
 	}
 
 	public Piece piece(Position position) {
+		if (!positionExists(position)) {
+			throw new BoardException("Position not on the board");
+		} // mesma lógica do de cima, mas com position
 		return pieces[position.getRow()][position.getColumn()];
+	}
+
+	public void placePiece(Piece piece, Position position) {
+		if (thereIsAPiece(position)) {
+			throw new BoardException("There is already a piece on position" + position);
+		}
+		pieces[position.getRow()][position.getColumn()] = piece;
+		piece.position = position;// tem q falar q essa peça nao eh mais nula
+
+	}// ele vai na matriz de peças do tabuleiro e atribui à essa posição a peça q
+		// veio como argumento
+		// o pieces já foi instanciado no construtor
+
+	private boolean positionExists(int row, int column) {
+		return row >= 0 && row < rows && column >= 0 && column < columns;
+	}// a posição tem q ser maior ou igual a zero e menor q o limite do
+		// tabuleiro()rows e columns
+
+	private boolean positionExists(Position position) {
+		return positionExists(position.getRow(), position.getColumn());
+	}
+
+	public boolean thereIsAPiece(Position position) {
+		if (!positionExists(position)) {
+			throw new BoardException("Position not on the board");
+		}
+		return piece(position) != null;
 	}
 
 }
