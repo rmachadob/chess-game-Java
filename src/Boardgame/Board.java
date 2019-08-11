@@ -48,6 +48,21 @@ public class Board {
 		// veio como argumento
 		// o pieces já foi instanciado no construtor
 
+	public Piece removePiece(Position position) {
+		if (!positionExists(position)) {
+			throw new BoardException("Position not on the board");
+		}
+		if (piece(position) == null) {
+			return null;
+		} // se a peça nessa posição for nula, não tem peça entao retorna o nulo
+		Piece aux = piece(position);// variável auxiliar q recebe a peça da posição
+		aux.position = null;// vai pegar essa peça aux e falar que agora é nulo(saiu do tabuleiro)
+		pieces[position.getRow()][position.getColumn()] = null;
+		// essa matriz de peças (pieces) nessa posição vai receber nulo,
+		// ou seja, na matriz foi removida a peça e agora é nulo
+		return aux;// manda retornar aux q contém a peça q foi retirada
+	}
+
 	private boolean positionExists(int row, int column) {
 		return row >= 0 && row < rows && column >= 0 && column < columns;
 	}// a posição tem q ser maior ou igual a zero e menor q o limite do

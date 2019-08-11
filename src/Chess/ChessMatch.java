@@ -1,7 +1,9 @@
 package Chess;
 
 import Boardgame.Board;
-import Chess.pieces.King;
+import Boardgame.BoardException;
+import Boardgame.Piece;
+import Boardgame.Position;
 import Chess.pieces.Rook;
 
 public class ChessMatch {
@@ -26,6 +28,32 @@ public class ChessMatch {
 		// o board.piece ij. (ChessPiece) é downcasting pra ele entender q não é uma
 		// piece.
 		// somente a camada de xadrez interage com o program
+
+	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
+		Position source = sourcePosition.toPosition();// toPosition pra trocar do xadrez pra matriz
+		Position target = targetPosition.toPosition();
+		validateSourcePosition(source);// pra validar se tinha peça na origem
+		Piece capturedPiece = makeMove(source, target);
+		return (ChessPiece) capturedPiece;// downcasting da Piece pra ChessPiece
+	}
+
+	private Piece makeMove(Position source, Position target) {
+		Piece p = board.removePiece(source);// tira a peça da origem
+		Piece capturedPiece = board.removePiece(target);// para remover eventual peça no destino,
+		// q logicamente é uma peça capturada
+		board.placePiece(p, target);// agora sim coloca a peça de origem no destino
+		return capturedPiece;
+	}
+
+	private void validateSourcePosition(Position position) {
+		if (!board.thereIsAPiece(position)) {
+			throw new ChessException("There is no piece on source position");
+		} // o método thereIsAPiece retorna um BoardException, mas a validaçao desse
+			// método retorna um ChessException. Mas na real toda exceção de xadrez é tbm
+			// uma de tabuleiro só q mais específica
+			// ou seja, lá na classe ChessException eu atualizo, tiro o RuntimeException e
+			// deixo Board
+	}
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
