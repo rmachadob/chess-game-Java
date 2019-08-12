@@ -1,13 +1,13 @@
 package Boardgame;
 
 public class Position {
-	
+
 	private int row;
 	private int column;
-	
+
 	public Position(int row, int column) {
-		this.row=row;
-		this.column=column;
+		this.row = row;
+		this.column = column;
 	}
 
 	public int getRow() {
@@ -28,7 +28,13 @@ public class Position {
 
 	@Override
 	public String toString() {
-		return row +", "+column;
+		return row + ", " + column;
 	}
-	
+
+	public void setValues(int row, int column) {
+		this.row = row;
+		this.column = column;// método para atualizar os valores da posição(usa lá no chess.pieces pra
+								// movimentar as peças)
+	}
+
 }

@@ -68,9 +68,10 @@ public class Board {
 	}// a posição tem q ser maior ou igual a zero e menor q o limite do
 		// tabuleiro()rows e columns
 
-	private boolean positionExists(Position position) {
+	public boolean positionExists(Position position) {
 		return positionExists(position.getRow(), position.getColumn());
-	}
+	}// troquei pra public pra resolver o problema de acesso no chesspieces. se der
+		// ruim depois pode ser isso
 
 	public boolean thereIsAPiece(Position position) {
 		if (!positionExists(position)) {
