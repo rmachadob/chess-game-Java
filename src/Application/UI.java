@@ -50,11 +50,15 @@ public class UI {
 			// exceção
 	}
 
+	// esse metodo abaixo é pra imprimir o tabuleiro sem os movimentos possíveis
+	// (não tá recebendo possible moves como argumento q nem o de baixo), por isso
+	// passa o valor
+	// falso na hora de imprimir a peça
 	public static void printBoard(ChessPiece[][] pieces) {
 		for (int i = 0; i < pieces.length; i++) {
 			System.out.print((8 - i) + " ");
 			for (int j = 0; j < pieces.length; j++) {
-				printPiece(pieces[i][j]);
+				printPiece(pieces[i][j], false);
 
 			}
 			System.out.println();// quebra a linha
@@ -64,12 +68,33 @@ public class UI {
 		System.out.println("  a b c d e f g h");
 	}
 
-	private static void printPiece(ChessPiece piece) {
+	// é parecido com o de cima, mas imprime o tabuleiro considerando os movimentos
+	// possíveis. Por isso no printPiece eu passo possibleMoves e as posições ij.
+	public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
+		for (int i = 0; i < pieces.length; i++) {
+			System.out.print((8 - i) + " ");
+			for (int j = 0; j < pieces.length; j++) {
+				printPiece(pieces[i][j], possibleMoves[i][j]);
+//com o possible moves nesse print piece 
+			}
+			System.out.println();// quebra a linha
+
+		}
+
+		System.out.println("  a b c d e f g h");
+	}
+
+	// esse boolean background é uma variável pra indicar se deve ou não colorir o
+	// board
+	private static void printPiece(ChessPiece piece, boolean background) {
+		if (background) {// se variável background verdadeira imprime azul no board
+			System.out.print(ANSI_BLUE_BACKGROUND);
+		}
 		if (piece == null) {
-			System.out.print("-");
+			System.out.print("-" + ANSI_RESET);// tem que resetar a cor depois de imprimir o tracinho tbm
 		} else {
 			if (piece.getColor() == Color.WHITE) {
-				System.out.print(ANSI_WHITE + piece + ANSI_RESET);
+				System.out.print(ANSI_WHITE + piece + ANSI_RESET);// o ANSI_RESET limpa as cores depois de imprimir
 			} else {
 				System.out.print(ANSI_YELLOW + piece + ANSI_RESET);
 			}

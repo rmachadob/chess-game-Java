@@ -19,14 +19,17 @@ public class Program {
 			try {
 				UI.clearScreen();
 				UI.printBoard(chessMatch.getPieces());// esse getPieces já devolve a matriz
-
 				System.out.println();// pula uma linha antes de pedir o source position
 				System.out.print("Source: ");
 				ChessPosition source = UI.readChessPosition(sc);
 
+				boolean[][] possibleMoves = chessMatch.possibleMoves(source);
+				UI.clearScreen();
+				UI.printBoard(chessMatch.getPieces(), possibleMoves);// sobrecarga desse printBoard, passando também os
+																		// movimentos possíveis
+
 				System.out.println();// salta uma linha
 				System.out.print("Target: ");// pede o destino
-
 				ChessPosition target = UI.readChessPosition(sc);
 
 				ChessPiece capturedPiece = chessMatch.performChessMove(source, target);

@@ -29,6 +29,13 @@ public class ChessMatch {
 		// piece.
 		// somente a camada de xadrez interage com o program
 
+	public boolean[][] possibleMoves(ChessPosition sourcePosition) {
+		Position position = sourcePosition.toPosition();// convertendo posição de xadrez pra uma normal
+		validateSourcePosition(position);// já consigo validar a posição logo q o usuário entra com ela
+		return board.piece(position).possibleMoves();// essa linha aqui retorna a posição COM o possible moves (fica
+														// pintado no board)
+	}
+	
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();// toPosition pra trocar do xadrez pra matriz
 		Position target = targetPosition.toPosition();
