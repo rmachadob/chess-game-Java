@@ -53,6 +53,12 @@ public class ChessMatch {
 			// uma de tabuleiro só q mais específica
 			// ou seja, lá na classe ChessException eu atualizo, tiro o RuntimeException e
 			// deixo Board
+		if (!board.piece(position).isThereAnyPossibleMove()) {
+			throw new ChessException("There is no possible moves for the chosen piece");
+		} // nesse segundo if, estou acessando o tabuleiro, a partir do tabuleiro acesso a
+			// peça na posição de origem e desse ponto chamo o método pra ver se tem
+			// movimento possível.Tem que negar a condição tbm(!).
+
 	}
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
