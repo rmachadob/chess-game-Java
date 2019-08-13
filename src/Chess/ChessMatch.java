@@ -1,5 +1,8 @@
 package Chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Boardgame.Board;
 import Boardgame.Piece;
 import Boardgame.Position;
@@ -11,12 +14,17 @@ public class ChessMatch {
 	private int turn;
 	private Color currentPlayer;
 	private Board board;
+	// listas para controle das peças no tabuleiro e as capturadas
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
 
 	public ChessMatch() {
 		board = new Board(8, 8);
 		turn = 1;
 		currentPlayer = Color.WHITE;
 		initialSetup();
+		// essas listas em cima eu poderia também colocar aqui dentro do construtor, ia
+		// instanciar do mesmo jeito junto com o ChessMatch
 	}// é essa classe q tem q saber o tamanho do board
 
 	public int getTurn() {
@@ -61,8 +69,15 @@ public class ChessMatch {
 	private Piece makeMove(Position source, Position target) {
 		Piece p = board.removePiece(source);// tira a peça da origem
 		Piece capturedPiece = board.removePiece(target);// para remover eventual peça no destino,
-		// q logicamente é uma peça capturada
+		// q logicamente é uma peça capturada e guardar na variavel capturedPiece
 		board.placePiece(p, target);// agora sim coloca a peça de origem no destino
+		if (capturedPiece != null) {
+			piecesOnTheBoard.remove(capturedPiece);
+			capturedPieces.add(capturedPiece);// nessa linha o add tava dando problema pq tipo da variável capturedPiece
+												// é do tipo Piece, enquanto a lista estava como ChessPiece. Resolveu
+												// trocando na lista pra ficar mais genérico(Piece)
+		}
+
 		return capturedPiece;
 	}
 
@@ -104,7 +119,8 @@ public class ChessMatch {
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
-
+		piecesOnTheBoard.add(piece);// esse aqui coloca na lista as peças do tabuleiro.piecesOnTheBoard é o nome da
+									// lista(toda hora to achando q eh método).
 	}// metodo pra colocar as peças usando posiçao do xadrez e nao matriz.
 		// o metodo .toPosition é do ChessPosition e converte da matriz pro xadrez
 
