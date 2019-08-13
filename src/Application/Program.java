@@ -18,7 +18,7 @@ public class Program {
 		while (true) {// pra rodar indefinido, ainda n tem lógica de cheque {
 			try {
 				UI.clearScreen();
-				UI.printBoard(chessMatch.getPieces());// esse getPieces já devolve a matriz
+				UI.printMatch(chessMatch);// chessMatch já vem com tudo, turnos e current player
 				System.out.println();// pula uma linha antes de pedir o source position
 				System.out.print("Source: ");
 				ChessPosition source = UI.readChessPosition(sc);

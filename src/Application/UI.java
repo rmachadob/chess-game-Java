@@ -3,6 +3,7 @@ package Application;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import Chess.ChessMatch;
 import Chess.ChessPiece;
 import Chess.ChessPosition;
 import Chess.Color;
@@ -48,6 +49,13 @@ public class UI {
 			throw new InputMismatchException("Error reading chess position. Valid values are from a1 to h8");
 		} // pra evitar problemas com formato coloca tudo num bloco try catch e lança a
 			// exceção
+	}
+
+	public static void printMatch(ChessMatch chessMatch) {
+		printBoard(chessMatch.getPieces());//imprime o tabuleiro
+		System.out.println();
+		System.out.println("Turn : " + chessMatch.getTurn());//turnos
+		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());//jogador atual
 	}
 
 	// esse metodo abaixo é pra imprimir o tabuleiro sem os movimentos possíveis

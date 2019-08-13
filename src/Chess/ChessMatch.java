@@ -8,12 +8,24 @@ import Chess.pieces.Rook;
 
 public class ChessMatch {
 
+	private int turn;
+	private Color currentPlayer;
 	private Board board;
 
 	public ChessMatch() {
 		board = new Board(8, 8);
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		initialSetup();
 	}// é essa classe q tem q saber o tamanho do board
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public Color getCurrentPlayer() {
+		return currentPlayer;
+	}
 
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];// pega do board o tamanho
@@ -35,13 +47,14 @@ public class ChessMatch {
 		return board.piece(position).possibleMoves();// essa linha aqui retorna a posição COM o possible moves (fica
 														// pintado no board)
 	}
-	
+
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
 		Position source = sourcePosition.toPosition();// toPosition pra trocar do xadrez pra matriz
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source);// pra validar se tinha peça na origem
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
+		nextTurn();
 		return (ChessPiece) capturedPiece;// downcasting da Piece pra ChessPiece
 	}
 
@@ -61,6 +74,12 @@ public class ChessMatch {
 			// uma de tabuleiro só q mais específica
 			// ou seja, lá na classe ChessException eu atualizo, tiro o RuntimeException e
 			// deixo Board
+		if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
+			throw new ChessException("The chosen piece is nor yours");
+		} // se o jogador for diferente do board.position e da cor, está tentando mexer
+			// uma peça q não é dele. O getColor é uma propriedade do ChessPiece, só que o
+			// board.Piece é da classe mais genérica (piece), por isso tem q fazer o
+			// downcasting pra ChessPiece
 		if (!board.piece(position).isThereAnyPossibleMove()) {
 			throw new ChessException("There is no possible moves for the chosen piece");
 		} // nesse segundo if, estou acessando o tabuleiro, a partir do tabuleiro acesso a
@@ -75,6 +94,13 @@ public class ChessMatch {
 		}
 	}// é só validar testando se a posição de destino é um movimento possível em
 		// relação à peça q está na posição de origem
+
+	private void nextTurn() {
+		turn++;
+		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+	}// expressão condicional ternária: se o currentPlayer for igual a Color.WHITE,
+		// então agora será black(? Color.BLACK). Caso contrário será color.WHITE (:
+		// Color.WHITE)
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
