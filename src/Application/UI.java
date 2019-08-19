@@ -61,6 +61,9 @@ public class UI {
 		System.out.println();
 		System.out.println("Turn : " + chessMatch.getTurn());// turnos
 		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());// jogador atual
+		if(chessMatch.getCheck()) {//chama o método do cheque e testa
+			System.out.println("CHECK!");
+		}
 	}
 
 	// esse metodo abaixo é pra imprimir o tabuleiro sem os movimentos possíveis

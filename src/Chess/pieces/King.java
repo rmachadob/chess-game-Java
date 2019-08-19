@@ -23,7 +23,7 @@ public class King extends ChessPiece {
 																// tem q pegar a peça p da posição
 		return p == null || p.getColor() != getColor();
 	}// meu rei vai poder mover quando a casa for vazia (ou seja p==null) ou então
-		// quando a cor é diferente(peça adver)
+		// quando a cor é diferente(peça adversaria)
 
 	@Override
 	public boolean[][] possibleMoves() {

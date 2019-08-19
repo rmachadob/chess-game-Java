@@ -2,6 +2,7 @@ package Chess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import Boardgame.Board;
 import Boardgame.Piece;
@@ -14,6 +15,8 @@ public class ChessMatch {
 	private int turn;
 	private Color currentPlayer;
 	private Board board;
+	private boolean check;
+
 	// listas para controle das peças no tabuleiro e as capturadas
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 	private List<Piece> capturedPieces = new ArrayList<>();
@@ -27,10 +30,16 @@ public class ChessMatch {
 		// instanciar do mesmo jeito junto com o ChessMatch
 	}// é essa classe q tem q saber o tamanho do board
 
+	
+	//esses gets abaixo servem para ter acesso no programa principal
 	public int getTurn() {
 		return turn;
 	}
-
+	
+	public boolean getCheck() {
+		return check;
+	}
+	
 	public Color getCurrentPlayer() {
 		return currentPlayer;
 	}
@@ -62,6 +71,14 @@ public class ChessMatch {
 		validateSourcePosition(source);// pra validar se tinha peça na origem
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
+
+		if (testCheck(currentPlayer)) {
+			undoMove(source, target, capturedPiece);
+			throw new ChessException("You can't put yourself in check");
+		}
+
+		check = (testCheck(opponent(currentPlayer))) ? true : false;// testa se o adversário foi posto em cheque
+
 		nextTurn();
 		return (ChessPiece) capturedPiece;// downcasting da Piece pra ChessPiece
 	}
@@ -72,14 +89,24 @@ public class ChessMatch {
 		// q logicamente é uma peça capturada e guardar na variavel capturedPiece
 		board.placePiece(p, target);// agora sim coloca a peça de origem no destino
 		if (capturedPiece != null) {
-			piecesOnTheBoard.remove(capturedPiece);
+			piecesOnTheBoard.remove(capturedPiece);// remove e add nas respectivas listas
 			capturedPieces.add(capturedPiece);// nessa linha o add tava dando problema pq tipo da variável capturedPiece
 												// é do tipo Piece, enquanto a lista estava como ChessPiece. Resolveu
 												// trocando na lista pra ficar mais genérico(Piece)
 		}
-
 		return capturedPiece;
 	}
+
+	private void undoMove(Position source, Position target, Piece capturedPiece) {
+		Piece p = board.removePiece(target);
+		board.placePiece(p, source);
+
+		if (capturedPiece != null) {
+			board.placePiece(capturedPiece, target);
+			capturedPieces.remove(capturedPiece);
+			piecesOnTheBoard.add(capturedPiece);
+		}
+	}// desfaz a lógica do método makeMove, devolvendo eventual peça capturada
 
 	private void validateSourcePosition(Position position) {
 		if (!board.thereIsAPiece(position)) {
@@ -116,6 +143,37 @@ public class ChessMatch {
 	}// expressão condicional ternária: se o currentPlayer for igual a Color.WHITE,
 		// então agora será black(? Color.BLACK). Caso contrário será color.WHITE (:
 		// Color.WHITE)
+
+	private Color opponent(Color color) {
+		return (color == color.WHITE) ? Color.BLACK : Color.WHITE;
+	}// devolve o oponente e sua respectiva cor. Se a cor que eu recebi como
+		// argumento for branca, devolve preta
+
+	private ChessPiece king(Color color) {// downcasting pq cor é da piece
+		List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece) x).getColor() == color)
+				.collect(Collectors.toList());
+		for (Piece p : list) {
+			if (p instanceof King) {
+				return (ChessPiece) p;
+			}
+		}
+		throw new IllegalStateException("There is no " + color + " king on the board");
+	}// execeção pra nunca acontecer
+
+	public boolean testCheck(Color color) {
+		Position kingPosition = king(color).getChessPosition().toPosition();// pega o rei da cor e a posição em matriz
+																			// (chessPosition + toPosition)
+		List<Piece> opponentPieces = piecesOnTheBoard.stream()
+				.filter(x -> ((ChessPiece) x).getColor() == opponent(color)).collect(Collectors.toList());
+		for (Piece p : opponentPieces) {// pra cada peça p na lista de peças do oponente
+			boolean[][] mat = p.possibleMoves();
+			if (mat[kingPosition.getRow()][kingPosition.getColumn()]) {
+				return true;
+			}
+		} // corre a matriz de peças adversárias e se a posição retorna true o rei está em
+			// cheque, senão retorna falso
+		return false;
+	}
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());

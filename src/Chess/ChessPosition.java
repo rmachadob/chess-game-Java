@@ -30,7 +30,7 @@ public class ChessPosition {
 	}// da posição do xadrez para a matriz
 
 	protected static ChessPosition fromPosition(Position position) {
-		return new ChessPosition((char) ('a' - position.getColumn()), 8 - position.getRow());
+		return new ChessPosition((char) ('a' + position.getColumn()), 8 - position.getRow());
 	}// mesma lógica do de cima, mas o contrário, da matriz para o xadrez
 
 	@Override // precisa fazer o toString dessa posição as aways

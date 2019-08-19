@@ -17,11 +17,13 @@ public abstract class ChessPiece extends Piece {
 		return color;
 	}
 
+	public ChessPosition getChessPosition() {
+		return ChessPosition.fromPosition(position);
+	}// método para retornar a chessPosition na classe clesspiece
+
 	protected boolean isThereOpponentPiece(Position position) {
 		ChessPiece p = (ChessPiece) getBoard().piece(position);// usa sempre o getBoard pra pegar a peça
 		return p != null && p.getColor() != color;// testa se tem peça(!= de nulo) e se a cor é diferente dessa peça
 	}
-	
-	
-	
+
 }
