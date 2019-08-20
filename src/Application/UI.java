@@ -60,9 +60,14 @@ public class UI {
 		printCapturedPieces(captured);
 		System.out.println();
 		System.out.println("Turn : " + chessMatch.getTurn());// turnos
-		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());// jogador atual
-		if(chessMatch.getCheck()) {//chama o método do cheque e testa
-			System.out.println("CHECK!");
+		if (!chessMatch.getCheckMate()) {
+			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());// jogador atual
+			if (chessMatch.getCheck()) {// chama o método do cheque e testa
+				System.out.println("CHECK!");
+			}
+		} else {
+			System.out.println("CHECKMATE!");
+			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
 		}
 	}
 
@@ -117,7 +122,7 @@ public class UI {
 		}
 		System.out.print(" ");
 	}
-	
+
 	private static void printCapturedPieces(List<ChessPiece> captured) {
 		// filtragem de lista usando expressão lambda. o "x-> x.getColor" é um predicado
 		// que vai pegar um elemento da lista e aí verifica a condição desse elemento(ou

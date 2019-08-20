@@ -18,7 +18,7 @@ public class Program {
 		ChessMatch chessMatch = new ChessMatch();
 		List<ChessPiece> captured = new ArrayList<>();// lista q recebe as peças capturadas
 
-		while (true) {// pra rodar indefinido, ainda n tem lógica de cheque {
+		while (!chessMatch.getCheckMate())// enquanto não estiver em cheque mate { {
 			try {
 				UI.clearScreen();
 				UI.printMatch(chessMatch, captured);// chessMatch já vem com tudo, turnos e current player
@@ -48,6 +48,8 @@ public class Program {
 				System.out.println(e.getMessage());
 				sc.nextLine();
 			}
-		}
+		UI.clearScreen();
+		UI.printMatch(chessMatch, captured);
 	}
+
 }
