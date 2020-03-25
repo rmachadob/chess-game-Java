@@ -61,16 +61,16 @@ public class ChessMatch {
 		}
 		return mat;
 	} // Os 2 for percorrem as posições.
-		// pra cada posiçao i j do meu tabuleiro a matriz mat na linha i coluna j recebe
-		// o board.piece ij. (ChessPiece) é downcasting pra ele entender q não é uma
-		// piece.
-		// somente a camada de xadrez interage com o program
+	// pra cada posiçao i j do meu tabuleiro a matriz mat na linha i coluna j recebe
+	// o board.piece ij. (ChessPiece) é downcasting pra ele entender q não é uma
+	// piece.
+	// somente a camada de xadrez interage com o program
 
 	public boolean[][] possibleMoves(ChessPosition sourcePosition) {
 		Position position = sourcePosition.toPosition();// convertendo posição de xadrez pra uma normal
 		validateSourcePosition(position);// já consigo validar a posição logo q o usuário entra com ela
 		return board.piece(position).possibleMoves();// essa linha aqui retorna a posição COM o possible moves (fica
-														// pintado no board)
+		// pintado no board)
 	}
 
 	public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
@@ -106,8 +106,24 @@ public class ChessMatch {
 		if (capturedPiece != null) {
 			piecesOnTheBoard.remove(capturedPiece);// remove e add nas respectivas listas
 			capturedPieces.add(capturedPiece);// nessa linha o add tava dando problema pq tipo da variável capturedPiece
-												// é do tipo Piece, enquanto a lista estava como ChessPiece. Resolveu
-												// trocando na lista pra ficar mais genérico(Piece)
+			// é do tipo Piece, enquanto a lista estava como ChessPiece. Resolveu
+			// trocando na lista pra ficar mais genérico(Piece)
+		}
+		//#special move castling king side rook - roque pequeno
+		if(p instanceof King && target.getColumn() == source.getColumn() +2) {
+			Position sourceT = new Position(source.getRow(), source.getColumn() +3);
+			Position targetT = new Position(source.getRow(), source.getColumn() +1);
+			ChessPiece rook = (ChessPiece)board.removePiece(sourceT);
+			board.placePiece(rook, targetT);
+			rook.increaseMoveCount();
+		}
+		//Queen side rook - roque grande
+		if(p instanceof King && target.getColumn() == source.getColumn() -2) {
+			Position sourceT = new Position(source.getRow(), source.getColumn() -4);
+			Position targetT = new Position(source.getRow(), source.getColumn() -1);
+			ChessPiece rook = (ChessPiece)board.removePiece(sourceT);
+			board.placePiece(rook, targetT);
+			rook.increaseMoveCount();
 		}
 		return capturedPiece;
 	}
@@ -122,27 +138,43 @@ public class ChessMatch {
 			capturedPieces.remove(capturedPiece);
 			piecesOnTheBoard.add(capturedPiece);
 		}
+		
+		if(p instanceof King && target.getColumn() == source.getColumn() +2) {
+			Position sourceT = new Position(source.getRow(), source.getColumn() +3);
+			Position targetT = new Position(source.getRow(), source.getColumn() +1);
+			ChessPiece rook = (ChessPiece)board.removePiece(targetT);
+			board.placePiece(rook, sourceT);
+			rook.decreaseMoveCount();
+		}
+		//Queen side rook - roque grande
+		if(p instanceof King && target.getColumn() == source.getColumn() -2) {
+			Position sourceT = new Position(source.getRow(), source.getColumn() -4);
+			Position targetT = new Position(source.getRow(), source.getColumn() -1);
+			ChessPiece rook = (ChessPiece)board.removePiece(targetT);
+			board.placePiece(rook, sourceT);
+			rook.decreaseMoveCount();
+		}
 	}// desfaz a lógica do método makeMove, devolvendo eventual peça capturada
 
 	private void validateSourcePosition(Position position) {
 		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		} // o método thereIsAPiece retorna um BoardException, mas a validaçao desse
-			// método retorna um ChessException. Mas na real toda exceção de xadrez é tbm
-			// uma de tabuleiro só q mais específica
-			// ou seja, lá na classe ChessException eu atualizo, tiro o RuntimeException e
-			// deixo Board
+		// método retorna um ChessException. Mas na real toda exceção de xadrez é tbm
+		// uma de tabuleiro só q mais específica
+		// ou seja, lá na classe ChessException eu atualizo, tiro o RuntimeException e
+		// deixo Board
 		if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
 			throw new ChessException("The chosen piece is nor yours");
 		} // se o jogador for diferente do board.position e da cor, está tentando mexer
-			// uma peça q não é dele. O getColor é uma propriedade do ChessPiece, só que o
-			// board.Piece é da classe mais genérica (piece), por isso tem q fazer o
-			// downcasting pra ChessPiece
+		// uma peça q não é dele. O getColor é uma propriedade do ChessPiece, só que o
+		// board.Piece é da classe mais genérica (piece), por isso tem q fazer o
+		// downcasting pra ChessPiece
 		if (!board.piece(position).isThereAnyPossibleMove()) {
 			throw new ChessException("There is no possible moves for the chosen piece");
 		} // nesse segundo if, estou acessando o tabuleiro, a partir do tabuleiro acesso a
-			// peça na posição de origem e desse ponto chamo o método pra ver se tem
-			// movimento possível.Tem que negar a condição tbm(!).
+		// peça na posição de origem e desse ponto chamo o método pra ver se tem
+		// movimento possível.Tem que negar a condição tbm(!).
 
 	}
 
@@ -151,19 +183,19 @@ public class ChessMatch {
 			throw new ChessException("The chosen piece can't move to target position");
 		}
 	}// é só validar testando se a posição de destino é um movimento possível em
-		// relação à peça q está na posição de origem
+	// relação à peça q está na posição de origem
 
 	private void nextTurn() {
 		turn++;
 		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
 	}// expressão condicional ternária: se o currentPlayer for igual a Color.WHITE,
-		// então agora será black(? Color.BLACK). Caso contrário será color.WHITE (:
-		// Color.WHITE)
+	// então agora será black(? Color.BLACK). Caso contrário será color.WHITE (:
+	// Color.WHITE)
 
 	private Color opponent(Color color) {
 		return (color == color.WHITE) ? Color.BLACK : Color.WHITE;
 	}// devolve o oponente e sua respectiva cor. Se a cor que eu recebi como
-		// argumento for branca, devolve preta
+	// argumento for branca, devolve preta
 
 	private ChessPiece king(Color color) {
 		List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece) x).getColor() == color)
@@ -202,8 +234,8 @@ public class ChessMatch {
 				for (int j = 0; j < board.getColumns(); j++) {
 					if (mat[i][j]) {
 						Position source = ((ChessPiece) p).getChessPosition().toPosition();// não da pra usar a posição
-																							// direto da matriz pq é da
-																							// classe piece e private
+						// direto da matriz pq é da
+						// classe piece e private
 						Position target = new Position(i, j);// só instanciar com a posição possível (target), passando
 						// i e j
 						Piece capturedPiece = makeMove(source, target);
@@ -222,9 +254,9 @@ public class ChessMatch {
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 		piecesOnTheBoard.add(piece);// esse aqui coloca na lista as peças do tabuleiro.piecesOnTheBoard é o nome da
-									// lista(toda hora to achando q eh método).
+		// lista(toda hora to achando q eh método).
 	}// metodo pra colocar as peças usando posiçao do xadrez e nao matriz.
-		// o metodo .toPosition é do ChessPosition e converte da matriz pro xadrez
+	// o metodo .toPosition é do ChessPosition e converte da matriz pro xadrez
 
 	private void initialSetup() {
 
@@ -232,7 +264,7 @@ public class ChessMatch {
 		placeNewPiece('b', 1, new Knight(board, Color.WHITE));
 		placeNewPiece('c', 1, new Bishop(board, Color.WHITE));
 		placeNewPiece('d', 1, new Queen(board, Color.WHITE));
-		placeNewPiece('e', 1, new King(board, Color.WHITE));
+		placeNewPiece('e', 1, new King(board, Color.WHITE, this));
 		placeNewPiece('f', 1, new Bishop(board, Color.WHITE));
 		placeNewPiece('g', 1, new Knight(board, Color.WHITE));
 		placeNewPiece('h', 1, new Rook(board, Color.WHITE));
@@ -249,7 +281,7 @@ public class ChessMatch {
 		placeNewPiece('b', 8, new Knight(board, Color.BLACK));
 		placeNewPiece('c', 8, new Bishop(board, Color.BLACK));
 		placeNewPiece('d', 8, new Queen(board, Color.BLACK));
-		placeNewPiece('e', 8, new King(board, Color.BLACK));
+		placeNewPiece('e', 8, new King(board, Color.BLACK, this));
 		placeNewPiece('f', 8, new Bishop(board, Color.BLACK));
 		placeNewPiece('g', 8, new Knight(board, Color.BLACK));
 		placeNewPiece('h', 8, new Rook(board, Color.BLACK));
@@ -264,5 +296,5 @@ public class ChessMatch {
 
 	}
 }// pode tirar o board, trocar o metodo pra placeNewPiece.
-	// aí colocar as posições de xadrez e instanciar a peça
-	// board.placePiece(new King(board, Color.WHITE), new Position(7, 4));
+// aí colocar as posições de xadrez e instanciar a peça
+// board.placePiece(new King(board, Color.WHITE), new Position(7, 4));
