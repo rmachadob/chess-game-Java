@@ -41,6 +41,12 @@ public class Program {
 				} // sempre q eu mandar executar o movimento de xadrez, testa pra ver se
 					// capturou alguma peça e adiciona na lista
 
+				if(chessMatch.getPromoted()!= null) {
+					System.out.println("Enter piece for promotion (B/N/R/Q)");
+					String type = sc.nextLine();
+					chessMatch.replacePromotedPiece(type);
+				}
+				
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();// assim aguarda o usuário dar enter pra seguir
