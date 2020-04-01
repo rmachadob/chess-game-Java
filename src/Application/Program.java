@@ -1,5 +1,6 @@
 package Application;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -29,7 +30,7 @@ public class Program {
 				boolean[][] possibleMoves = chessMatch.possibleMoves(source);
 				UI.clearScreen();
 				UI.printBoard(chessMatch.getPieces(), possibleMoves);// sobrecarga desse printBoard, passando também os
-																		// movimentos possíveis
+				// movimentos possíveis
 
 				System.out.println();// salta uma linha
 				System.out.print("Target: ");// pede o destino
@@ -39,14 +40,19 @@ public class Program {
 				if (capturedPiece != null) {
 					captured.add(capturedPiece);
 				} // sempre q eu mandar executar o movimento de xadrez, testa pra ver se
-					// capturou alguma peça e adiciona na lista
+				// capturou alguma peça e adiciona na lista
 
 				if(chessMatch.getPromoted()!= null) {
 					System.out.println("Enter piece for promotion (B/N/R/Q)");
-					String type = sc.nextLine();
+					String type = sc.nextLine().toUpperCase();
+
+					while(!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) {
+						System.out.println("Invalid Value! Enter piece for promotion (B/N/R/Q)");
+						type = sc.nextLine().toUpperCase();
+					}
 					chessMatch.replacePromotedPiece(type);
 				}
-				
+
 			} catch (ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();// assim aguarda o usuário dar enter pra seguir
